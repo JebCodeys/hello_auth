@@ -1,0 +1,18 @@
+# UVM Shibboleth authentication for Flask app on silk
+
+AuthType shibboleth
+ShibRequireSession On
+ShibUseHeaders On
+Require valid-user
+
+# Route all requests through the WSGI app
+Options +ExecCGI
+AddHandler wsgi-script .py
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ wsgi.py/$1 [QSA,PT,L]
+
+# Admin netids (comma-separated, no spaces) — controls the /admin route
+# SetEnv ADMIN_NETIDS abc123,xyz789
+SetEnv FLASK_SECRET_KEY change-this-to-something-secret
