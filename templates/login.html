@@ -2,23 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login Error</title>
+  <title>Login</title>
   <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 80px auto; padding: 0 20px; }
-    .card { border: 1px solid #ccc; border-radius: 8px; padding: 32px; text-align: center; }
-    h2 { color: #c0392b; }
-    a { color: #003da5; font-size: 0.9rem; }
+    body { font-family: sans-serif; max-width: 640px; margin: 80px auto; padding: 0 20px; }
+    .card { border: 1px solid #ccc; border-radius: 8px; padding: 32px; }
+    h2 { margin-top: 0; color: #003da5; }
+    .section-title { font-weight: bold; color: #333; margin-bottom: 12px; }
+    .btn-cas {
+      display: inline-block;
+      background: #003da5;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .btn-cas:hover { background: #002d7a; }
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 24px 0; color: #999; font-size: 0.85rem;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: #ddd;
+    }
+    label { display: block; margin-bottom: 4px; font-size: 0.9rem; color: #444; }
+    input[type=text], input[type=password] {
+      width: 100%; padding: 8px 10px; box-sizing: border-box;
+      border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;
+      margin-bottom: 14px;
+    }
+    button[type=submit] {
+      background: #003da5; color: white; border: none;
+      padding: 10px 24px; border-radius: 4px; font-size: 0.95rem; cursor: pointer;
+    }
+    button[type=submit]:hover { background: #002d7a; }
+    .error { color: #c0392b; margin-top: 14px; font-size: 0.9rem; }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>Authentication Error</h2>
+    <h2>Sign In</h2>
+
+    <p class="section-title">UVM NetID</p>
+    <a class="btn-cas" href="/login?action=cas">Login with UVM NetID &rarr;</a>
+
+    <div class="divider">or</div>
+
+    <p class="section-title">External User</p>
+    <form method="POST" action="/login">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" autocomplete="current-password" required>
+      <button type="submit">Sign In</button>
+    </form>
+
     {% if error %}
-    <p>{{ error }}</p>
-    {% else %}
-    <p>CAS authentication failed.</p>
+    <p class="error">{{ error }}</p>
     {% endif %}
-    <p><a href="/login">Try again &rarr;</a></p>
   </div>
 </body>
 </html>

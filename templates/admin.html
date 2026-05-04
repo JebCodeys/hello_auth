@@ -4,20 +4,101 @@
   <meta charset="UTF-8">
   <title>Admin Dashboard</title>
   <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 80px auto; padding: 0 20px; }
-    .card { border: 1px solid #ccc; border-radius: 8px; padding: 32px; text-align: center; }
-    .netid { font-size: 2rem; font-weight: bold; color: #003da5; }
-    .label { color: #666; margin-bottom: 8px; }
+    body { font-family: sans-serif; max-width: 760px; margin: 60px auto; padding: 0 20px; }
+    .card { border: 1px solid #ccc; border-radius: 8px; padding: 32px; margin-bottom: 24px; }
+    h2 { margin-top: 0; color: #003da5; }
+    .user-id { font-size: 1.4rem; font-weight: bold; color: #003da5; }
     .badge { display: inline-block; background: #003da5; color: white; border-radius: 4px; padding: 2px 10px; font-size: 0.85rem; margin-bottom: 16px; }
     a { color: #003da5; font-size: 0.9rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; }
+    th { background: #f5f5f5; color: #444; }
+    .btn-del {
+      background: none; border: 1px solid #c0392b; color: #c0392b;
+      padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;
+    }
+    .btn-del:hover { background: #c0392b; color: white; }
+    label { display: block; margin-bottom: 4px; font-size: 0.9rem; color: #444; }
+    input[type=text], input[type=password], input[type=email] {
+      width: 100%; padding: 7px 10px; box-sizing: border-box;
+      border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+    .form-row { display: flex; gap: 16px; }
+    .form-row > div { flex: 1; }
+    button[type=submit] {
+      background: #003da5; color: white; border: none;
+      padding: 9px 20px; border-radius: 4px; font-size: 0.9rem; cursor: pointer;
+    }
+    button[type=submit]:hover { background: #002d7a; }
+    .hint { font-size: 0.8rem; color: #888; margin-top: -8px; margin-bottom: 12px; }
   </style>
 </head>
 <body>
   <div class="card">
-    <p class="label">Admin Dashboard</p>
-    <p class="netid">{{ netid }}</p>
+    <h2>Admin Dashboard</h2>
+    <p class="user-id">{{ user.id }}</p>
     <p><span class="badge">admin</span></p>
     <p><a href="/">&larr; Back to home</a></p>
+  </div>
+
+  <div class="card">
+    <h2>External Users</h2>
+    {% if local_users %}
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Roles</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in local_users %}
+        <tr>
+          <td>{{ u.username }}</td>
+          <td>{{ u.email or '—' }}</td>
+          <td>{{ u.roles or '—' }}</td>
+          <td>
+            <form method="POST" action="/admin/users/{{ u.username }}/delete"
+                  onsubmit="return confirm('Delete {{ u.username }}?')">
+              <button class="btn-del" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p style="color:#888; font-size:0.9rem;">No external users yet.</p>
+    {% endif %}
+
+    <h3 style="margin-top:28px;">Add External User</h3>
+    <form method="POST" action="/admin/users">
+      <div class="form-row">
+        <div>
+          <label for="username">Username *</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+          <label for="password">Password *</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email">
+        </div>
+        <div>
+          <label for="roles">Roles</label>
+          <input type="text" id="roles" name="roles" placeholder="e.g. viewer,moderator">
+          <p class="hint">Comma-separated list of roles</p>
+        </div>
+      </div>
+      <button type="submit">Create User</button>
+    </form>
   </div>
 </body>
 </html>
