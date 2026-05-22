@@ -21,6 +21,9 @@
     <p>{% for role in roles | sort %}<span class="badge {% if user.type == 'local' %}badge-local{% endif %}">{{ role }}</span>{% endfor %}</p>
     {% endif %}
     <p><a href="/whoami">Debug info &rarr;</a></p>
+    {% if "moderator" in roles or "admin" in roles %}
+    <p><a href="/moderator">Moderator dashboard &rarr;</a></p>
+    {% endif %}
     {% if "admin" in roles %}
     <p><a href="/admin">Admin dashboard &rarr;</a></p>
     {% endif %}

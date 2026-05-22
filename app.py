@@ -231,6 +231,16 @@ def admin_delete_user(username):
     return redirect(url_for("admin"))
 
 
+@app.route("/moderator")
+def moderator():
+    u = current_user()
+    if not u:
+        return redirect(url_for("login"))
+    if not has_role("moderator") and not has_role("admin"):
+        return render_template("forbidden.html", user_id=u["id"], required_role="moderator"), 403
+    return render_template("moderator.html", user=u, roles=get_roles())
+
+
 @app.route("/whoami")
 def whoami():
     return {"user": current_user(), "roles": sorted(get_roles())}
